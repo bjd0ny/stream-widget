@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            margin: 0;
+            background: transparent; /* For stream overlay */
+            font-family: Arial, sans-serif;
+            display: flex;
+            align-items: center;
+        }
+        #container {
+            display: flex;
+            align-items: flex-start;
+            background-color: rgba(0, 0, 0, 0.7); /* Black semi-transparent bg */
+            padding: 10px;
+            border-radius: 5px;
+        }
+        #image-container {
+            text-align: center;
+            margin-right: 20px;
+        }
+        #person-image {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+        #person-name {
+            color: white;
+            font-size: 16px;
+            margin-top: 5px;
+        }
+        #counters {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .counter {
+            color: white;
+            font-size: 18px;
+            margin: 5px 0;
+        }
+    </style>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage.js"></script>
+</head>
+<body>
+    <div id="container">
+        <div id="image-container">
+            <img id="person-image" src="" alt="Person">
+            <div id="person-name">Loading...</div>
+        </div>
+        <div id="counters">
+            <div class="counter">Aces: <span id="aces">0</span></div>
+            <div class="counter">Dimes: <span id="dimes">0</span></div>
+            <div class="counter">Assists: <span id="assists">0</span></div>
+            <div class="counter">Kills: <span id="kills">0</span></div>
+        </div>
+    </div>
+
+    <script>
+        const firebaseConfig = {
+  apiKey: "AIzaSyAGVOVJgaVXF-P4kXgbfn_YkdGGpAYiGkE",
+  authDomain: "volleybal-url-widget-1.firebaseapp.com",
+  projectId: "volleybal-url-widget-1",
+  storageBucket: "volleybal-url-widget-1.firebasestorage.app",
+  messagingSenderId: "202591980134",
+  appId: "1:202591980134:web:128cd806cc5c2ec03fbba7"
+};
+
+        // Update image
+        storage.ref('person/image').getDownloadURL().then((url) => {
+            document.getElementById('person-image').src = url;
+        }).catch(() => {
+            document.getElementById('person-image').src = 'https://via.placeholder.com/100'; // Fallback
+        });
+
+        // Update name
+        database.ref('widget/name').on('value', (snapshot) => {
+            document.getElementById('person-name').innerText = snapshot.val() || "No Name";
+        });
+
+        // Update counters
+        database.ref('widget/aces').on('value', (snapshot) => {
+            document.getElementById('aces').innerText = snapshot.val() || 0;
+        });
+        database.ref('widget/dimes').on('value', (snapshot) => {
+            document.getElementById('dimes').innerText = snapshot.val() || 0;
+        });
+        database.ref('widget/assists').on('value', (snapshot) => {
+            document.getElementById('assists').innerText = snapshot.val() || 0;
+        });
+        database.ref('widget/kills').on('value', (snapshot) => {
+            document.getElementById('kills').innerText = snapshot.val() || 0;
+        });
+    </script>
+</body>
+</html>
